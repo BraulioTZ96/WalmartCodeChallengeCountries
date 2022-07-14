@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">WalmartCodeChallengeCountries</string>
+    <string name="walmart_cc_countries">Walmart CC Countries</string>
+    <string name="comma">,</string>
+</resources>
