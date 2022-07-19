@@ -26,6 +26,7 @@ class CountryRVAdapter: RecyclerView.Adapter<CountryRVAdapter.CountryViewHolder>
     fun setCountries(newCountries: List<Country>){
         countries.clear()
         countries.addAll(newCountries)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CountryViewHolder {

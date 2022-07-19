@@ -1,25 +1,31 @@
 package com.example.walmartcodechallengecountries.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
+import androidx.lifecycle.*
+import com.example.walmartcodechallengecountries.helpers.ResponseHelper
 import com.example.walmartcodechallengecountries.model.Country
 import com.example.walmartcodechallengecountries.repositories.CountryImplementation
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainActivityViewModel(private val countryRepository: CountryImplementation): ViewModel() {
+@HiltViewModel
+class MainActivityViewModel @Inject constructor(private val countryRepository: CountryImplementation): ViewModel() {
 
-    lateinit var countryListResult: LiveData<List<Country>>
+    private val _countriesListResult: MutableLiveData<ResponseHelper> = MutableLiveData(ResponseHelper.Loading)
+    val countriesListResult: LiveData<ResponseHelper> get() = _countriesListResult
 
     init {
-        getCountries()
+        getAllCountries()
     }
 
-    private fun getCountries(){
-        countryListResult = liveData {
-            val countryList = countryRepository.getCountries()
-            emit(countryList)
+    private fun getAllCountries() {
+        viewModelScope.launch(Dispatchers.IO) {
+            countryRepository.getAllCountries().collect {
+                _countriesListResult.postValue(it)
+            }
         }
     }
-
 
 }
