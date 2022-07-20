@@ -37,30 +37,28 @@ class MainActivity : AppCompatActivity() {
         mainAViewModel.countriesListResult.observe(this) { state ->
             when(state) {
                 is ResponseHelper.Loading -> {
-                    binding.pgBar.visibility = View.VISIBLE
-                    binding.tvHeader.visibility = View.GONE
-                    binding.rvCountries.visibility = View.GONE
+                    setVisibilities(pgBarVisibility = View.VISIBLE, rvVisibility = View.GONE, tvExcVisibility = View.GONE)
                 }
                 is ResponseHelper.Success -> {
-                    binding.pgBar.visibility = View.GONE
-                    binding.tvHeader.visibility = View.GONE
-                    binding.rvCountries.visibility = View.VISIBLE
+                    setVisibilities(pgBarVisibility = View.GONE, rvVisibility = View.VISIBLE, tvExcVisibility = View.GONE)
                     countryRVAdapter.setCountries(state.countries)
                 }
                 is ResponseHelper.ErrorCode -> {
-                    binding.pgBar.visibility = View.GONE
-                    binding.rvCountries.visibility = View.GONE
-                    binding.tvHeader.visibility = View.VISIBLE
-                    binding.tvHeader.text = state.message
+                    setVisibilities(pgBarVisibility = View.GONE, rvVisibility = View.GONE, tvExcVisibility = View.VISIBLE)
+                    binding.tvException.text = state.message
                 }
                 is ResponseHelper.ErrorException -> {
-                    binding.pgBar.visibility = View.GONE
-                    binding.rvCountries.visibility = View.GONE
-                    binding.tvHeader.visibility = View.VISIBLE
-                    binding.tvHeader.text = state.error.localizedMessage
+                    setVisibilities(pgBarVisibility = View.GONE, rvVisibility = View.GONE, tvExcVisibility = View.VISIBLE)
+                    binding.tvException.text = state.error.localizedMessage
                 }
             }
         }
+    }
+
+    private fun setVisibilities(pgBarVisibility: Int, rvVisibility: Int, tvExcVisibility: Int){
+        binding.pgBar.visibility = pgBarVisibility
+        binding.rvCountries.visibility = rvVisibility
+        binding.tvException.visibility = tvExcVisibility
     }
 
     //Prevent memory leaks.
